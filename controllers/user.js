@@ -1,7 +1,7 @@
 'use strict'
 var Openpay = require('openpay'); //class
 var openpay = new Openpay('m0402xnzlpxadtw4jpgn', 'sk_8aa66416a2964c51a1372a4159633705'); //intance (id de comerciante, clave privada)
-
+var jwt = require('../service/jwt');
 const User = require('../models/user');
 
 function addUser(req, res) {
@@ -21,7 +21,6 @@ function addUser(req, res) {
         'last_name': data.last_name,
         'email': data.email,
         'phone_number': data.telefono,
-        'address.line1': data.address,
         'status': 'active',
         'requires_account': false
     };
@@ -50,15 +49,20 @@ function updateUser(req, res) {
     let customer_id = req.params.id; // id en mongodb
     let customer_id_openpay = req.body.id_openpay; // id en open pay
     var data = req.body // data de la peticion
-    var customerUpdate;
-    if (data.name) customerUpdate.name = data.name;
-    if (data.last_name) customerUpdate.last_name = data.last_name;
-    if (data.email) customerUpdate.email = data.email;
-    if (data.phone_number) customerUpdate.phone_number = data.phone_number;
-    if (address) customerUpdate.address.line1 = data.address;
-    openpay.customers.update(customer_id_openpay, customerRequest, function(error, customer) {
+    if (!data.name ||
+        !data.last_name ||
+        !data.email ||
+        !data.id_openpay ||
+        !data.address
+    ) return res.status(500).send({ message: `Faltaron campos en la peticion` });
+    var customerUpdate = {};
+    if (data.name) customerUpdate['name'] = data.name;
+    if (data.last_name) customerUpdate['last_name'] = data.last_name;
+    if (data.email) customerUpdate['email'] = data.email;
+    if (data.phone_number) customerUpdate['phone_number'] = data.phone_number;
+    openpay.customers.update(customer_id_openpay, customerUpdate, function(err, customer) {
         if (err) return res.status(500).send({ message: err });
-        User.findOneAndUpdate({ '_id': customer_id }, (err, customerUpdated) => {
+        User.findOneAndUpdate({ '_id': customer_id }, data, (err, customerUpdated) => {
             if (err) return res.status(500).send({ message: err });
             if (!customerUpdated) return res.status(404).send({ message: `No se encontro al usuario para actualizar` });
             return res.status(200).send({ user: customerUpdated });
@@ -66,15 +70,30 @@ function updateUser(req, res) {
     });
 }
 
+
+
+function login(req, res) {
+    let data = req.body;
+    if (!data.password || !data.email) return res.status(403).send({ message: `Error, no se mandaron todos los campos` });
+    User.find({ 'email': data.email }, (err, userLocated) => {
+        if (err) return res.status(500).send({ message: err });
+        if (!userLocated) return res.status(404).send({ message: `No existe el usuario con emal ${data.email}` });
+        User.find({ 'email': data.email, 'password': data.password }, (err, userLocated2) => {
+            if (err) return res.status(500).send({ message: err });
+            if (!userLocated2) return res.status(404).send({ message: `No existe el usuario con emal ${data.email}` });
+            return res.status(200).send({
+                'user': userLocated2,
+                'token': jwt.create(userLocated2)
+            })
+        })
+    })
+}
+
 function deleteUser(req, res) {
 
 }
 
 function getUser(req, res) {
-
-}
-
-function login(req, res) {
 
 }
 
