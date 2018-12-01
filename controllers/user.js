@@ -78,7 +78,7 @@ function login(req, res) {
     User.findOne({ 'email': data.email }, (err, userLocated) => {
         if (err) return res.status(500).send({ message: err });
         if (!userLocated) return res.status(404).send({ message: `No existe el usuario con emal ${data.email}` });
-        User.find({ 'email': data.email, 'password': data.password }, (err, userLocated2) => {
+        User.findOne({ 'email': data.email, 'password': data.password }, (err, userLocated2) => {
             if (err) return res.status(500).send({ message: err });
             if (!userLocated2) return res.status(404).send({ message: `No existe el usuario con emal ${data.email}` });
             return res.status(200).send({
