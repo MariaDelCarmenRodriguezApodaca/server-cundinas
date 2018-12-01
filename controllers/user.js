@@ -75,7 +75,7 @@ function updateUser(req, res) {
 function login(req, res) {
     let data = req.body;
     if (!data.password || !data.email) return res.status(403).send({ message: `Error, no se mandaron todos los campos` });
-    User.find({ 'email': data.email }, (err, userLocated) => {
+    User.findOne({ 'email': data.email }, (err, userLocated) => {
         if (err) return res.status(500).send({ message: err });
         if (!userLocated) return res.status(404).send({ message: `No existe el usuario con emal ${data.email}` });
         User.find({ 'email': data.email, 'password': data.password }, (err, userLocated2) => {
@@ -90,7 +90,16 @@ function login(req, res) {
 }
 
 function deleteUser(req, res) {
-
+    let customer_id = req.params.id; // id en mongodb
+    let customer_id_openpay = req.body.id_openpay; // id en open pay
+    openpay.customers.delete(customer_id_openpay, function(err) {
+        if (err) return res.status(500).send({ message: err });
+        User.findByIdAndDelete(customer_id, (err, userDeleted) => {
+            if (err) return res.status(500).send({ message: `Error al eliminar usuario ${err}` });
+            if (!userDeleted) return res.status(404).send({ message: `No se encontro al usuario` });
+            return res.status(200).send({ user: 'userDeleted' });
+        });
+    });
 }
 
 function getUser(req, res) {
