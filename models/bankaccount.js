@@ -8,4 +8,5 @@ const backacconutSchema = new Schema({
     clave: { type: String, required: true },
     alias: { type: String, required: true },
     holder_name: { type: String, required: true }
-})
+});
+module.exports = mongoose.model('Bankaccount', backacconutSchema);

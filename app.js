@@ -15,6 +15,7 @@ var openpay = new Openpay('m0402xnzlpxadtw4jpgn', 'sk_8aa66416a2964c51a1372a4159
 
 const userRoutes = require('./routes/user');
 const cardRoutes = require('./routes/card');
+const bankaccountRouter = require('./routes/bankaccount');
 /**
  * MIDDLEARES
  */
@@ -40,11 +41,11 @@ app.get('/', (req, res) => {
 
 app.use('/user', userRoutes);
 app.use('/card', cardRoutes);
+app.use('/bankaccount', bankaccountRouter);
 
 app.post('/charge', (req, res) => {
     console.log(req.body);
     var data = req.body;
-
 
     var chargeRequest = {
         'source_id': data.id,
@@ -68,39 +69,17 @@ app.post('/charge', (req, res) => {
     });
 });
 
-
-app.post('/tarjeta', (req, res) => {
-
-    var cardRequest = {
-        'card_number': '4658285101700791',
-        'holder_name': 'Maria del carmen',
-        'expiration_year': '22',
-        'expiration_month': '11',
-        'cvv2': '042'
-    };
-
-    openpay.customers.cards.create('a0visto5jvlz1ecadhav', cardRequest, function(err, card) {
-        if (err) {
-            console.log(err);
-            return res.status(500).send({ message: `Error ${err}` });
-        }
-        console.log(card);
-        res.status(200).send({ card });
-    });
-});
-
-
 app.post('/pay', (req, res) => {
     let data = res.body;
     var payoutRequest = {
-        'method': 'bank_account',
-        'destination_id': 'kxx7crvssx2o5tnjs2sy',
-        'amount': 10.50,
-        'description': 'Retiro de saldo semanal',
-        'order_id': 'oid-00021'
+        "method": "card",
+        "destination_id": 'kiubsqjaznbbzubjbfl5',
+        "amount": 1.50,
+        "description": "Test payout with existing card"
+            // 'order_id': 'oid-00021'
     };
     //QWERTYUIOPASDFGHJKLÑZXCVBNM,.-
-    openpay.customers.payouts.create('afydgqjwyhxhhgcqjp7s', payoutRequest, function(err, payout) {
+    openpay.payouts.create(payoutRequest, function(err, payout) {
         if (err) {
             console.log(err);
             return res.status(500).send({ message: err });
@@ -110,13 +89,11 @@ app.post('/pay', (req, res) => {
     });
 })
 
+
 app.post('/pay2', (req, res) => {
     var payoutRequest = {
         'method': 'card',
-        'bank_account': {
-            'card_number': '4658285101700791',
-            'holder_name': 'Maria Rodriguez'
-        },
+        'destination_id': '5c03996cab92e200164e81f8',
         'amount': 500,
         'description': 'Pago a tercero'
     };
