@@ -4,6 +4,10 @@ var openpay = new Openpay('m0402xnzlpxadtw4jpgn', 'sk_8aa66416a2964c51a1372a4159
 var jwt = require('../service/jwt');
 const User = require('../models/user');
 
+/**
+ * ----------------------------NUEVO USUARIO---------------------------------
+ */
+
 function addUser(req, res) {
     //al agregar el usuario primero se agregara en open pay y despues en mi base de datos
     var data = req.body;
@@ -13,9 +17,8 @@ function addUser(req, res) {
         !data.email ||
         !data.address ||
         !data.password ||
-        !data.role)
-        return res.status(500).send({ message: `No se mandaron todos los datos` });
-
+        !data.role
+    ) return res.status(500).send({ message: `No se mandaron todos los datos` });
     var customerRequest = {
         'name': data.name,
         'last_name': data.last_name,
@@ -24,7 +27,6 @@ function addUser(req, res) {
         'status': 'active',
         'requires_account': false
     };
-
     openpay.customers.create(customerRequest, function(err, customer) {
         if (err) return res.status(500).send({ message: err });
         let user = new User();
@@ -40,11 +42,13 @@ function addUser(req, res) {
             if (err) return res.status(500).send({ message: `Error al guardar el usuario en la base de datos ${err}` });
             if (!userSaved) return res.status(500).send({ message: `Error desconocido al guardar el usuario en la base de datos` });
             res.status(200).send({ user: userSaved });
-        })
+        });
 
     });
 }
-
+/**
+ * ----------------------------ACTUALIZAR USUARIO--------------------------------
+ */
 function updateUser(req, res) {
     let customer_id = req.params.id; // id en mongodb
     let customer_id_openpay = req.body.id_openpay; // id en open pay
@@ -69,9 +73,9 @@ function updateUser(req, res) {
         });
     });
 }
-
-
-
+/**
+ * -----------------------------LOGIN DE USUARIO--------------------------------
+ */
 function login(req, res) {
     let data = req.body;
     if (!data.password || !data.email) return res.status(403).send({ message: `Error, no se mandaron todos los campos` });
@@ -88,7 +92,9 @@ function login(req, res) {
         })
     })
 }
-
+/**
+ * ----------------------------BORRAR USUARIO-----------------------------------
+ */
 function deleteUser(req, res) {
     let customer_id = req.params.id; // id en mongodb
     let customer_id_openpay = req.body.id_openpay; // id en open pay
@@ -101,18 +107,49 @@ function deleteUser(req, res) {
         });
     });
 }
-
+/**
+ * ---------------------------OBTENER UN USUARIO--------------------------------
+ */
 function getUser(req, res) {
-
+    let id = req.params.id;
+    User.findById(id, (err, usersLocated) => {
+        if (err) return res.status(500).send({ message: `Error al obtener el listado de usuarios ${err}` });
+        if (!usersLocated) return res.status(404).send({ message: `No se encontraron usuarios` });
+        return res.status(200).send({ users: usersLocated });
+    })
 }
-
+/**
+ * --------------------------LISTADO DE USUARIO----------------------------------
+ */
 function getUsers(req, res) {
-
+    User.find({}, (err, usersLocated) => {
+        if (err) return res.status(500).send({ message: `Error al obtener el listado de usuarios ${err}` });
+        if (!usersLocated) return res.status(404).send({ message: `No se encontraron usuarios` });
+        return res.status(200).send({ users: usersLocated });
+    })
+}
+/**
+ * --------------------------OBTENER USUARIOS OPENPAY ---------------------------
+ */
+function getUsersOpenPay(req, res) {
+    openpay.customers.list({}, function(err, list) {
+        if (err) return res.status(500).send({ message: err });
+        if (!list) return res.status(404).send({ message: `No hay usuarios en open pay, registre para poder obtener una lista` });
+        return res.status(200).send({ users: list });
+    });
+}
+/**
+ * --------------------------OBTENER UN USUARIO OPENPAY---------------------------
+ */
+function getUserOpenPay(req, res) {
+    let id = req.params.id;
+    openpay.customers.get(id, function(err, customer) {
+        if (err) return res.status(500).send({ message: err });
+        if (!customer) return res.status(404).send({ message: `No hay usuarios en open pay, registre para poder obtener una lista` });
+        return res.status(200).send({ users: customer });
+    });
 }
 
-function getUserXCundina(req, res) {
-
-}
 
 
 
@@ -123,5 +160,6 @@ module.exports = {
     getUser,
     login,
     getUsers,
-    getUserXCundina
+    getUsersOpenPay,
+    getUserOpenPay
 }

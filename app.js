@@ -1,9 +1,11 @@
 'use strict'
-var express = require('express');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
+const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 var cors = require('cors');
+
 var app = express();
+
 /**
  * OPENPAY CONFIG
  */
@@ -18,6 +20,7 @@ const userRoutes = require('./routes/user');
  */
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 //configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -54,7 +57,7 @@ app.post('/charge', (req, res) => {
             'email': 'sadasd@adsasd.com'
         }
     }
-    openpay.charges.create(chargeRequest, function (err, charge) {
+    openpay.charges.create(chargeRequest, function(err, charge) {
         if (err) {
             console.log(err);
             return res.status(500).send({ message: `Error: ${err}` });
@@ -75,30 +78,13 @@ app.post('/tarjeta', (req, res) => {
         'cvv2': '042'
     };
 
-    openpay.customers.cards.create('a0visto5jvlz1ecadhav', cardRequest, function (err, card) {
+    openpay.customers.cards.create('a0visto5jvlz1ecadhav', cardRequest, function(err, card) {
         if (err) {
             console.log(err);
             return res.status(500).send({ message: `Error ${err}` });
         }
         console.log(card);
         res.status(200).send({ card });
-    });
-});
-
-app.post('/cliente', (req, res) => {
-    var customerRequest = {
-        'name': 'Maria del carmen',
-        'email': 'bombytaj.r@gmail.com',
-        'requires_account': false
-    };
-
-    openpay.customers.create(customerRequest, function (err, customer) {
-        if (err) {
-            console.log(err);
-            return res.status(500).send({ message: `Error ${err}` });
-        }
-        console.log(customer);
-        res.status(200).send({ customer });
     });
 });
 
@@ -113,7 +99,7 @@ app.post('/pay', (req, res) => {
         'order_id': 'oid-00021'
     };
     //QWERTYUIOPASDFGHJKLÑZXCVBNM,.-
-    openpay.customers.payouts.create('afydgqjwyhxhhgcqjp7s', payoutRequest, function (err, payout) {
+    openpay.customers.payouts.create('afydgqjwyhxhhgcqjp7s', payoutRequest, function(err, payout) {
         if (err) {
             console.log(err);
             return res.status(500).send({ message: err });
@@ -133,9 +119,9 @@ app.post('/pay2', (req, res) => {
         'amount': 500,
         'description': 'Pago a tercero'
     };
-    
 
-    openpay.payouts.create(payoutRequest, (err, payout)=> {
+
+    openpay.payouts.create(payoutRequest, (err, payout) => {
         if (err) {
             console.log(err);
             return res.status(500).send({ message: err });
@@ -146,4 +132,3 @@ app.post('/pay2', (req, res) => {
 })
 
 module.exports = app;
-
