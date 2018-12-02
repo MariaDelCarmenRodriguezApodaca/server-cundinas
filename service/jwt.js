@@ -7,6 +7,7 @@ var secret = config.secret_jwt;
 exports.create = (user) => {
     let payload = {
         'sub': user['_id'],
+        'id_openpay': user['id_openpay'],
         'name': user['name'],
         'last_name': user['last_name'],
         'email': user['email'],
