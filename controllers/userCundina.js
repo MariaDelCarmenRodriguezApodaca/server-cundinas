@@ -5,6 +5,7 @@ const UserCundina = require('../models/userCundina');
 function adduser(req, res) {
     let userAdmin = req.user.sub;
     let data = req.body;
+    console.log(data);
     if (!data.cundina ||
         !data.user
     ) return res.status(404).send({ message: `No se mandaron todos los datos` });
