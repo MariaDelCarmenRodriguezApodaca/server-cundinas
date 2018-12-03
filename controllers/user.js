@@ -129,6 +129,16 @@ function getUsers(req, res) {
     })
 }
 /**
+ * --------------------------LISTADO DE USUARIO----------------------------------
+ */
+function getUsersCliente(req, res) {
+    User.find({ role: 'Cliente' }, (err, usersLocated) => {
+        if (err) return res.status(500).send({ message: `Error al obtener el listado de usuarios ${err}` });
+        if (!usersLocated) return res.status(404).send({ message: `No se encontraron usuarios` });
+        return res.status(200).send({ users: usersLocated });
+    })
+}
+/**
  * --------------------------OBTENER USUARIOS OPENPAY ---------------------------
  */
 function getUsersOpenPay(req, res) {
@@ -161,5 +171,6 @@ module.exports = {
     login,
     getUsers,
     getUsersOpenPay,
-    getUserOpenPay
+    getUserOpenPay,
+    getUsersCliente
 }

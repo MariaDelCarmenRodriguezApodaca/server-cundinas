@@ -17,6 +17,8 @@ const userRoutes = require('./routes/user');
 const cardRoutes = require('./routes/card');
 const bankaccountRouter = require('./routes/bankaccount');
 const cundinaRoutes = require('./routes/cundina');
+const userCundinaApp = require('./routes/userCundina');
+
 /**
  * MIDDLEARES
  */
