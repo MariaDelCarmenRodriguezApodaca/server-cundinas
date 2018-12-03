@@ -14,7 +14,7 @@ function addCundina(req, res) {
     if (data.tipo != 'Mes' ||
         data.tipo != 'Semana' ||
         data.tipo != 'Quincena'
-    ) return releaseEvents.status(500).send({ message: `El tipo: ${data.tipo} no es valido` });
+    ) return res.status(500).send({ message: `El tipo: ${data.tipo} no es valido` });
     //calcular el pago individual 
     let pago_individual = data.cantidad / data.integrantes;
     pago_individual += '';
