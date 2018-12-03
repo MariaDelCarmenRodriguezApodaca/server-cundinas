@@ -24,6 +24,7 @@ function addCundina(req, res) {
     cundina.user = user;
     cundina.title = data.title;
     cundina.tipo = data.tipo;
+    cundina.time = data.time;
     cundina.cantidad = data.cantidad;
     cundina.creation = creation;
     cundina.start = null;
