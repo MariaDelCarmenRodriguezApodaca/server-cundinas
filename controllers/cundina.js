@@ -38,7 +38,7 @@ function addCundina(req, res) {
 
 }
 
-listCundina(req, res) {
+function listCundina(req, res) {
     let user = req.user.sub;
     Cundina.find()
 }
