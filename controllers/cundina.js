@@ -32,8 +32,8 @@ function addCundina(req, res) {
     cundina.pago_individual = pago_individual;
     cundina.status = 'Pendiente';
     cundina.save((err, cundinaSaved) => {
-        if (err) return res.start(500).send({ message: `Error al crear la cundina ${err}` });
-        if (!cundinaSaved) return res.start(404).send({ message: `No se logro crear la cundina` });
+        if (err) return res.status(500).send({ message: `Error al crear la cundina ${err}` });
+        if (!cundinaSaved) return res.status(404).send({ message: `No se logro crear la cundina` });
         return res.status(200).send({ cundina: cundinaSaved });
     })
 
