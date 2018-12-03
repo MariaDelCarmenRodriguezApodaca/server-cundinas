@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let cundinaSchema = new Schema({
-    user: { type: Schema.ObjectId, ref: 'user', required: [true, 'El campo user de la cundina es obligatorio'] },
+    user: { type: Schema.ObjectId, ref: 'User', required: [true, 'El campo user de la cundina es obligatorio'] },
     title: { type: String, required: [true, 'El campo name de la cundina es obligatorio'] },
     tipo: { type: String, required: [true, 'El tipo puede ser Mensual, Quicena, Semanal'] },
     time: { type: String, required: [true, 'El campo tiempo de la cundina es obligatorio: son el numero de pagos que habra'] },
