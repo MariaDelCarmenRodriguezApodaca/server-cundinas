@@ -40,11 +40,25 @@ function addCundina(req, res) {
 
 }
 
-function listCundina(req, res) {
+function listCundinaXAdmin(req, res) {
     let user = req.user.sub;
-    Cundina.find()
+    Cundina.find({ user: user }).populate({ path: 'user' }).exec((err, cundinas) => {
+        if (err) return res.status(200).send({ message: `Error al obtener listado ${err}` });
+        if (!cundinas) return res.status(404).send({ message: `No se encontraron cundinas` });
+        return res.status(200).send({ cundinas: cundinas });
+    })
+}
+
+function listAllCundinas(req, res) {
+    Cundina.find().populate({ path: 'user' }).exec((err, cundinas) => {
+        if (err) return res.status(200).send({ message: `Error al obtener listado ${err}` });
+        if (!cundinas) return res.status(404).send({ message: `No se encontraron cundinas` });
+        return res.status(200).send({ cundinas: cundinas });
+    })
 }
 
 module.exports = {
-    addCundina
+    addCundina,
+    listCundinaXAdmin,
+    listAllCundinas
 }
