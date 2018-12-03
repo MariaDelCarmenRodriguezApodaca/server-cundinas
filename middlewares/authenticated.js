@@ -23,5 +23,5 @@ exports.ensureAuth = (req, res, next) => {
 exports.isAdmin = (req, res, next) => {
     if (req.user.role != 'Admin') {
         next();
-    } else req.status(403).send({ message: `No cuentas con los permisos para estar aqui!` })
+    } else res.status(403).send({ message: `No cuentas con los permisos para estar aqui!` })
 }
