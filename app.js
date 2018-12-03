@@ -16,6 +16,7 @@ var openpay = new Openpay('m0402xnzlpxadtw4jpgn', 'sk_8aa66416a2964c51a1372a4159
 const userRoutes = require('./routes/user');
 const cardRoutes = require('./routes/card');
 const bankaccountRouter = require('./routes/bankaccount');
+const cundinaRoutes = require('./routes/cundina');
 /**
  * MIDDLEARES
  */
@@ -42,6 +43,7 @@ app.get('/', (req, res) => {
 app.use('/user', userRoutes);
 app.use('/card', cardRoutes);
 app.use('/bankaccount', bankaccountRouter);
+app.use('/cundina', cundinaRoutes);
 
 app.post('/charge', (req, res) => {
     console.log(req.body);

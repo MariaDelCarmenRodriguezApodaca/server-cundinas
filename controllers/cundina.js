@@ -38,6 +38,11 @@ function addCundina(req, res) {
 
 }
 
+listCundina(req, res) {
+    let user = req.user.sub;
+    Cundina.find()
+}
+
 module.exports = {
     addCundina
 }
