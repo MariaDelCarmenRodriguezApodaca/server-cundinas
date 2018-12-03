@@ -10,5 +10,6 @@ router.get('/getTodos', md_auth.ensureAuth, userCundinaCtrl.getUserCundina);
 router.get('/getXAdmin', md_auth.ensureAuth, userCundinaCtrl.getUserCundinaXAdmin);
 router.get('/getXCundina/:id', md_auth.ensureAuth, userCundinaCtrl.getUserXCundina);
 router.get('/getPendientesCliente', md_auth.ensureAuth, userCundinaCtrl.getPendientesXusuarioLogueado);
+router.put('/changeSolicitud/:id', md_auth.ensureAuth, userCundinaCtrl.changeStatusUserCundina);
 
 module.exports = router;

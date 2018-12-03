@@ -78,10 +78,30 @@ function getPendientesXusuarioLogueado(req, res) {
         })
 }
 
+function changeStatusUserCundina(req, res) {
+    let id = req.params.id;
+    let data = req.body;
+    if (!data.status) return res.status(404).send({ message: `No se mandaron todos los datos` });
+    if (data.status == 'Aceptada') {
+        UserCundina.findByIdAndUpdate(id, { status: data.status }, (err, solicitudUpdated) => {
+            if (err) return res.status(500).send({ message: `Error al aceptar solicitud ${err}` });
+            if (!solicitudUpdated) res.status(404).send({ message: `Solicitud no encontrada` });
+            return res.status(200).send({ userCundina: solicitudUpdated });
+        })
+    } else if (data.status == 'Rechazada') {
+        UserCundina.findByIdAndDelete(id, (err, solicitudDeleted) => {
+            if (err) return res.status(500).send({ message: `Error al eliminar solicitud ${err}` });
+            if (!solicitudDeleted) res.status(404).send({ message: `Solicitud no encontrada` });
+            return res.status(200).send({ userCundina: `Solicitud elimiada con exito` });
+        })
+    } else return res.status(500).send({ message: `El estatus ${data.status} no es valido` });
+}
+
 module.exports = {
     adduser,
     getUserCundina,
     getUserCundinaXAdmin,
     getUserXCundina,
-    getPendientesXusuarioLogueado
+    getPendientesXusuarioLogueado,
+    changeStatusUserCundina
 };
