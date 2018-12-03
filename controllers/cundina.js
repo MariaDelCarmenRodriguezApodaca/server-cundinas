@@ -11,8 +11,8 @@ function addCundina(req, res) {
         !data.cantidad ||
         !data.integrantes
     ) return res.status(500).send({ message: `No se mandaron todos los datos` });
-    if (data.tipo != 'Mes' ||
-        data.tipo != 'Semana' ||
+    if (data.tipo != 'Mes' &&
+        data.tipo != 'Semana' &&
         data.tipo != 'Quincena'
     ) return res.status(500).send({ message: `El tipo: ${data.tipo} no es valido` });
     //calcular el pago individual 
