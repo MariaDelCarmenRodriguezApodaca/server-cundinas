@@ -17,6 +17,7 @@ function addCundina(req, res) {
     ) return releaseEvents.status(500).send({ message: `El tipo: ${data.tipo} no es valido` });
     //calcular el pago individual 
     let pago_individual = data.cantidad / data.integrantes;
+    pago_individual += '';
     let creation = moment().format('YYYY-MM-DD');
     let user = req.user.sub;
     let cundina = new Cundina();
