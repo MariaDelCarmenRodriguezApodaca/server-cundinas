@@ -20,8 +20,8 @@ exports.ensureAuth = (req, res, next) => {
     } else return res.status(403).send({ message: `Tu no tienes permiso de estar aqui` });
 }
 
-exports.isAdmin = (req, res, next) => {
-    if (req.user.role != 'Admin') {
-        next();
-    } else res.status(403).send({ message: `No cuentas con los permisos para estar aqui!` })
-}
+// exports.isAdmin = (req, res, next) => {
+//     if (req.user.role != 'Admin') {
+//         next();
+//     } else res.status(403).send({ message: `No cuentas con los permisos para estar aqui!` })
+// }
