@@ -48,14 +48,15 @@ app.post('/charge', (req, res) => {
     var data = req.body;
 
     var chargeRequest = {
-        'source_id': data.id,
+        // 'source_id': data.id,
+        'source_id': 'kiubsqjaznbbzubjbfl5',
         'method': 'card',
         'amount': 100,
         'currency': 'MXN',
         'description': 'Cargo de prueba',
-        'device_session_id': data.deviceSessionId,
+        // 'device_session_id': data.deviceSessionId,
         'customer': {
-            'name': data.card.holder_name,
+            'name': 'Maria del carmen rodriguez apodaca',
             'email': 'sadasd@adsasd.com'
         }
     }
@@ -73,7 +74,7 @@ app.post('/pay', (req, res) => {
     let data = res.body;
     var payoutRequest = {
         "method": "card",
-        "destination_id": 'kiubsqjaznbbzubjbfl5',
+        // "destination_id": 'kiubsqjaznbbzubjbfl5',
         "amount": 1.50,
         "description": "Test payout with existing card"
             // 'order_id': 'oid-00021'
@@ -93,7 +94,7 @@ app.post('/pay', (req, res) => {
 app.post('/pay2', (req, res) => {
     var payoutRequest = {
         'method': 'card',
-        'destination_id': '5c03996cab92e200164e81f8',
+        // 'destination_id': '5c03996cab92e200164e81f8',
         'amount': 500,
         'description': 'Pago a tercero'
     };
