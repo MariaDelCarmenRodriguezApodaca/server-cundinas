@@ -67,7 +67,7 @@ function getUserXCundina(req, res) {
 
 function getPendientesXusuarioLogueado(req, res) {
     let userLogin = req.user.sub
-    UserCundina.find({ user_admin: userLogin, status: `Pendiente` })
+    UserCundina.find({ user: userLogin, status: `Pendiente` })
         .populate({ path: 'user' })
         .populate({ path: 'user_admin' })
         .populate({ path: 'cundina' })
