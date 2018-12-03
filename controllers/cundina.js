@@ -1,7 +1,9 @@
 'use strict'
 const moment = require('moment');
 const Cundina = require('../models/cundina');
-
+const Pago = require('../models/pago');
+const User = require('../models/user');
+const UserCundina = require('../models/userCundina');
 
 function addCundina(req, res) {
     let data = req.body;
@@ -57,8 +59,69 @@ function listAllCundinas(req, res) {
     })
 }
 
+function iniciarCundina(req, res) {
+    var id_cundina = req.params.id; //id de la cundina
+    var data = req.body;
+    var enviado = false;
+    var hoy = moment().format('YYYY-MM-DD');
+    if (!data.pago_individual |
+        !data.tipo ||
+        !data.time ||
+        !data.status ||
+        !data.integrantes
+    ) return res.status(500).send({ message: `No se mandaron todos los datos` });
+
+    UserCundina.find({ cundina: id_cundina }, (err, clientes) => {
+        if (err) return res.status(200).send({ message: `Error al obtener listado ${err}` });
+        if (!clientes) return res.status(404).send({ message: `No se encontraron clientes` });
+        var fecha = moment(hoy);
+        var i = 0;
+        for (i; i <= parseInt(data.time); i++) {
+            switch (data.tipo) {
+                case 'Semana':
+                    fecha.add(1, 'weeks');
+                    break;
+                case 'Quincena':
+                    fecha.add(2, 'weeks');
+                    break;
+                case 'Mes':
+                    fecha.add(1, 'months');
+                    break;
+            }
+            for (let x = 0; x < clientes.length; x++) {
+                let pago = new Pago();
+                pago.cundina = id_cundina;
+                pago.user = clientes[x]._id;
+                pago.cantidad = data.pago_individual;
+                pago.fecha = fecha.format('YYYY-MM-DD');
+                pago.status = 'Pendiente';
+                pago.save((err, saved) => {
+                    if (err) return res.status({ message: `Error al guardar el pago ${err}` });
+                    if (!saved) console.log('No se guardo un pago');
+                    console.log('pago agregado')
+                });
+            }
+            console.log(fecha);
+            if (i == parseInt(data.time) && !enviado) {
+                let data2 = {
+                    start: hoy,
+                    end: fecha.format('YYYY-MM-DD'),
+                    status: 'Activa',
+                }
+                Cundina.findByIdAndUpdate(id_cundina, data2, (err, cundinaUpdated) => {
+                    enviado = true;
+                    if (err) return res.status(500).send({ message: `Error al actualizar la cundina ${err}` });
+                    return res.status(200).send({ cundina: `OK` });
+                })
+            }
+        }
+    })
+
+}
+
 module.exports = {
     addCundina,
     listCundinaXAdmin,
-    listAllCundinas
+    listAllCundinas,
+    iniciarCundina
 }
