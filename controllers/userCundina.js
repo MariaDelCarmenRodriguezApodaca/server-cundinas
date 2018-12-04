@@ -110,7 +110,6 @@ function getUserParaCundina(req, res) {
                 for (let q = 0; q < usersCundina.length; q++) {
                     if (users[i]._id + '' == usersCundina[q].user + '') {
                         users.splice(i, 1);
-                        console.log(users);
                     }
                 }
             }

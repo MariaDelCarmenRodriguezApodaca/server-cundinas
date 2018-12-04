@@ -119,9 +119,19 @@ function iniciarCundina(req, res) {
 
 }
 
+function eliminarCundina(req, res) {
+    let id = req.params.id
+    Cundina.findByIdAndDelete(id, (err, deleted) => {
+        if (err) return res.status(200).send({ message: `Error al eliminar listado ${err}` });
+        if (!deleted) return res.status(404).send({ message: `No se encontraron cundinas` });
+        return res.status(200).send({ cundina: deleted });
+    })
+}
+
 module.exports = {
     addCundina,
     listCundinaXAdmin,
     listAllCundinas,
-    iniciarCundina
+    iniciarCundina,
+    deleted
 }
