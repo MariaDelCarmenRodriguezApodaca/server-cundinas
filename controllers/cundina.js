@@ -133,5 +133,5 @@ module.exports = {
     listCundinaXAdmin,
     listAllCundinas,
     iniciarCundina,
-    deleted
+    eliminarCundina
 }
