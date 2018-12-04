@@ -124,7 +124,14 @@ function eliminarCundina(req, res) {
     Cundina.findByIdAndDelete(id, (err, deleted) => {
         if (err) return res.status(200).send({ message: `Error al eliminar listado ${err}` });
         if (!deleted) return res.status(404).send({ message: `No se encontraron cundinas` });
-        return res.status(200).send({ cundina: deleted });
+        res.status(200).send({ cundina: deleted });
+        UserCundina.find({ cundina: deleted._id }, (err, users) => {
+            users.forEach(user => {
+                UserCundina.findByIdAndDelete(user._id, (err, userDeleted) => {
+                    if (err) console.log(err);
+                });
+            });
+        });
     })
 }
 
