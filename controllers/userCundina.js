@@ -54,7 +54,7 @@ function getUserCundinaXAdmin(req, res) {
 //devuelve a los usuraios por cundina de un administrador
 function getUserXCundina(req, res) {
     let id = req.params.id
-    UserCundina.find({ cundina: id })
+    UserCundina.find({ cundina: id, status: `Aceptada` })
         .populate({ path: 'user' })
         .populate({ path: 'user_admin' })
         .populate({ path: 'cundina' })
