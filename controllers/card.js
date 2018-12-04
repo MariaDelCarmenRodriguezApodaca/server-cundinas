@@ -3,7 +3,7 @@
 var Openpay = require('openpay'); //class
 var openpay = new Openpay('m0402xnzlpxadtw4jpgn', 'sk_8aa66416a2964c51a1372a4159633705'); //intance (id de comerciante, clave privada)
 const Card = require('../models/card');
-
+const User = require('../models/user');
 
 function addCard(req, res) {
     //tienen que mandar los datos de la tarjeta y id del usuario y el id del usuario en openpay
@@ -54,13 +54,13 @@ function addCard(req, res) {
 
 function getCardsForUser(req, res) {
     let id_user = req.user.sub; //id del dueño de las tarjetas
-    Card.find({ user: id_user }, (err, cardFinded) => {
-        if (err) return res.status(500).send({ message: `Error al lcalizar la tarjeta ${err}` });
-        if (!cardFinded) return res.status(404).send({ message: `el usuario con id ${id_user} no tiene tarjetas` });
-        console.log(cardFinded);
-        openpay.customers.cards.list(cardFinded.id_openpay, (err, list) => {
+    User.findById(id_user, (err, userFinded) => {
+        if (err) return res.status(500).send({ message: `Error al localizar el usuario ${err}` });
+        if (!userFinded) return res.status(404).send({ message: `el usuario con id ${id_user} no existe` });
+        console.log(userFinded);
+        openpay.customers.cards.list(userFinded.id_openpay, (err, list) => {
             if (err) return res.status(500).send({ message: err, punto: 'si' });
-            Card.find({ user_openpay: user_openpay }, (err, cards) => {
+            Card.find({ user: id_user }, (err, cards) => {
                 if (err) return res.status(500).send({ message: `Error al obtener las tarjetas ${err}` });
                 if (!cards) return res.status(404).send({ message: `no hay tarjetas guardadas` });
                 return res.status(200).send({
@@ -69,6 +69,7 @@ function getCardsForUser(req, res) {
                 })
             })
         });
+
     })
 
 
