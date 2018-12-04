@@ -1,5 +1,6 @@
 'use strict'
 const UserCundina = require('../models/userCundina');
+const User = require('../models/user');
 
 //agregar usuarios por cundina
 function adduser(req, res) {
@@ -97,11 +98,35 @@ function changeStatusUserCundina(req, res) {
     } else return res.status(500).send({ message: `El estatus ${data.status} no es valido` });
 }
 
+function getUserParaCundina(req, res) {
+    var cundina = req.params.id;
+    var clientes = [];
+    User.find({ role: 'Cliente' }, (err, users) => {
+        if (err) return res.status(500).send({ message: `Error  ${err}` });
+        UserCundina.find({ cundina: cundina }, (err, usersCundina) => {
+            if (err) return res.status(500).send({ message: `Error {err}` });
+            var i = 0;
+            for (i; i < users.length; i++) {
+                for (let q = 0; q < usersCundina.length; q++) {
+                    if (users[i]._id + '' == usersCundina[q].user + '') {
+                        users.splice(i, 1);
+                        console.log(users);
+                    }
+                }
+            }
+            if (i == users.length) {
+                return res.status(200).send(users);
+            }
+        })
+    })
+}
+
 module.exports = {
     adduser,
     getUserCundina,
     getUserCundinaXAdmin,
     getUserXCundina,
     getPendientesXusuarioLogueado,
-    changeStatusUserCundina
+    changeStatusUserCundina,
+    getUserParaCundina
 };
