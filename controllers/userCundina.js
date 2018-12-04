@@ -115,7 +115,7 @@ function getUserParaCundina(req, res) {
                 }
             }
             if (i == users.length) {
-                return res.status(200).send(users);
+                return res.status(200).send({ users });
             }
         })
     })
