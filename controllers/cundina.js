@@ -68,7 +68,8 @@ function iniciarCundina(req, res) {
     var data = req.body;
     var enviado = false;
     var hoy = moment().format('YYYY-MM-DD');
-    if (!data.pago_individual |
+    if (!data.pago_individual ||
+        !data.user ||
         !data.tipo ||
         !data.time ||
         !data.status ||
@@ -108,7 +109,7 @@ function iniciarCundina(req, res) {
             }
         }
         var x = 0;
-        for (x; x < ((clientes.length) + 1); x++) {
+        for (x; x < ((clientes.length)); x++) {
             switch (data.tipo) {
                 case 'Semana':
                     fecha.add(1, 'weeks');
@@ -135,16 +136,28 @@ function iniciarCundina(req, res) {
 
         }
         if (i >= (parseInt(data.time)) && x >= clientes.length) {
-            let data2 = {
-                start: hoy,
-                end: fecha.format('YYYY-MM-DD'),
-                status: 'Activa',
-            }
-            Cundina.findByIdAndUpdate(id_cundina, data2, (err, cundinaUpdated) => {
-                enviado = true;
-                if (err) return res.status(500).send({ message: `Error al actualizar la cundina ${err}` });
-                return res.status(200).send({ cundina: `OK` });
-            })
+            let pago = new Pago();
+            pago.cundina = id_cundina;
+            pago.user = data.user;
+            pago.cantidad = data.pago_individual;
+            pago.fecha = fecha.format('YYYY-MM-DD');
+            pago.status = 'Pendiente';
+            pago.type = 'Pago';
+            pago.save((err, saved) => {
+                if (err) return res.status({ message: `Error al guardar el pago ${err}` });
+                if (!saved) console.log('No se guardo un pago');
+                console.log('pago a administrador agregado');
+                let data2 = {
+                    start: hoy,
+                    end: fecha.format('YYYY-MM-DD'),
+                    status: 'Activa',
+                }
+                Cundina.findByIdAndUpdate(id_cundina, data2, (err, cundinaUpdated) => {
+                    enviado = true;
+                    if (err) return res.status(500).send({ message: `Error al actualizar la cundina ${err}` });
+                    return res.status(200).send({ cundina: `OK` });
+                })
+            });
         }
     })
 
