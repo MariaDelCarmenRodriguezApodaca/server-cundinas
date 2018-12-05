@@ -108,7 +108,7 @@ function iniciarCundina(req, res) {
             }
         }
         var x = 0;
-        for (x; x < clientes.length; x++) {
+        for (x; x < ((clientes.length) + 1); x++) {
             switch (data.tipo) {
                 case 'Semana':
                     fecha.add(1, 'weeks');
