@@ -103,7 +103,7 @@ function iniciarCundina(req, res) {
                 pago.save((err, saved) => {
                     if (err) return res.status({ message: `Error al guardar el pago ${err}` });
                     if (!saved) console.log('No se guardo un pago');
-                    console.log('pago agregado')
+                    console.log('pago agregado');
                 });
             }
         }
@@ -130,11 +130,11 @@ function iniciarCundina(req, res) {
             pago.save((err, saved) => {
                 if (err) return res.status({ message: `Error al guardar el pago ${err}` });
                 if (!saved) console.log('No se guardo un pago');
-                console.log('pago agregado')
+                console.log('pago agregado');
             });
 
         }
-        if (i == (parseInt(data.time) + 1) && x == clientes.length) {
+        if (i >= (parseInt(data.time)) && x >= clientes.length) {
             let data2 = {
                 start: hoy,
                 end: fecha.format('YYYY-MM-DD'),
