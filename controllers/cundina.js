@@ -60,6 +60,10 @@ function listAllCundinas(req, res) {
 }
 
 function iniciarCundina(req, res) {
+    /**
+     * falta agregar un pago extra para el administrador
+     * agregar los registros de los pagos para los clientes
+     */
     var id_cundina = req.params.id; //id de la cundina
     var data = req.body;
     var enviado = false;
@@ -76,7 +80,7 @@ function iniciarCundina(req, res) {
         if (!clientes) return res.status(404).send({ message: `No se encontraron clientes` });
         var fecha = moment(hoy);
         var i = 0;
-        for (i; i <= parseInt(data.time); i++) {
+        for (i; i <= (parseInt(data.time) + 1); i++) {
             switch (data.tipo) {
                 case 'Semana':
                     fecha.add(1, 'weeks');
@@ -95,25 +99,52 @@ function iniciarCundina(req, res) {
                 pago.cantidad = data.pago_individual;
                 pago.fecha = fecha.format('YYYY-MM-DD');
                 pago.status = 'Pendiente';
+                pago.type = 'Cobro';
                 pago.save((err, saved) => {
                     if (err) return res.status({ message: `Error al guardar el pago ${err}` });
                     if (!saved) console.log('No se guardo un pago');
                     console.log('pago agregado')
                 });
             }
-            console.log(fecha);
-            if (i == parseInt(data.time) && !enviado) {
-                let data2 = {
-                    start: hoy,
-                    end: fecha.format('YYYY-MM-DD'),
-                    status: 'Activa',
-                }
-                Cundina.findByIdAndUpdate(id_cundina, data2, (err, cundinaUpdated) => {
-                    enviado = true;
-                    if (err) return res.status(500).send({ message: `Error al actualizar la cundina ${err}` });
-                    return res.status(200).send({ cundina: `OK` });
-                })
+        }
+        var x = 0;
+        for (x; x < clientes.length; x++) {
+            switch (data.tipo) {
+                case 'Semana':
+                    fecha.add(1, 'weeks');
+                    break;
+                case 'Quincena':
+                    fecha.add(2, 'weeks');
+                    break;
+                case 'Mes':
+                    fecha.add(1, 'months');
+                    break;
             }
+            let pago = new Pago();
+            pago.cundina = id_cundina;
+            pago.user = clientes[x]._id;
+            pago.cantidad = data.pago_individual;
+            pago.fecha = fecha.format('YYYY-MM-DD');
+            pago.status = 'Pendiente';
+            pago.type = 'Pago';
+            pago.save((err, saved) => {
+                if (err) return res.status({ message: `Error al guardar el pago ${err}` });
+                if (!saved) console.log('No se guardo un pago');
+                console.log('pago agregado')
+            });
+
+        }
+        if (i == (parseInt(data.time) + 1) && x == clientes.length) {
+            let data2 = {
+                start: hoy,
+                end: fecha.format('YYYY-MM-DD'),
+                status: 'Activa',
+            }
+            Cundina.findByIdAndUpdate(id_cundina, data2, (err, cundinaUpdated) => {
+                enviado = true;
+                if (err) return res.status(500).send({ message: `Error al actualizar la cundina ${err}` });
+                return res.status(200).send({ cundina: `OK` });
+            })
         }
     })
 
@@ -135,10 +166,21 @@ function eliminarCundina(req, res) {
     })
 }
 
+function getCundinasForClientes(req, res) {
+    let user = req.params.id; //id del cliente
+    UserCundina.find({ user: users }, (err, users) => {
+        if (err) return res.status(500).send({ message: `Error al obtener el listado de suarios ${err}` });
+        users.forEach(user => {
+
+        });
+    })
+}
+
 module.exports = {
     addCundina,
     listCundinaXAdmin,
     listAllCundinas,
     iniciarCundina,
-    eliminarCundina
+    eliminarCundina,
+    getCundinasForClientes
 }

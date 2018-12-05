@@ -7,6 +7,7 @@ let pagoSchema = new Schema({
     user: { type: Schema.ObjectId, ref: 'User' },
     cantidad: String,
     fecha: String,
+    type: String,
     status: String,
 });
 
