@@ -81,7 +81,7 @@ function iniciarCundina(req, res) {
         if (!clientes) return res.status(404).send({ message: `No se encontraron clientes` });
         var fecha = moment(hoy);
         var i = 0;
-        for (i; i <= (parseInt(data.time) + 1); i++) {
+        for (i; i <= (parseInt(data.time)); i++) {
             switch (data.tipo) {
                 case 'Semana':
                     fecha.add(1, 'weeks');
