@@ -18,6 +18,7 @@ const cardRoutes = require('./routes/card');
 const bankaccountRouter = require('./routes/bankaccount');
 const cundinaRoutes = require('./routes/cundina');
 const userCundinaRoutes = require('./routes/userCundina');
+const pagosRoutes = require('./routes/pago');
 
 /**
  * MIDDLEARES
@@ -47,6 +48,7 @@ app.use('/card', cardRoutes);
 app.use('/bankaccount', bankaccountRouter);
 app.use('/cundina', cundinaRoutes);
 app.use('/userCundina', userCundinaRoutes);
+app.use('/pago', pagosRoutes);
 
 app.post('/charge', (req, res) => {
     console.log(req.body);

@@ -96,7 +96,7 @@ function iniciarCundina(req, res) {
             for (let x = 0; x < clientes.length; x++) {
                 let pago = new Pago();
                 pago.cundina = id_cundina;
-                pago.user = clientes[x]._id;
+                pago.user = clientes[x].user;
                 pago.cantidad = data.pago_individual;
                 pago.fecha = fecha.format('YYYY-MM-DD');
                 pago.status = 'Pendiente';
