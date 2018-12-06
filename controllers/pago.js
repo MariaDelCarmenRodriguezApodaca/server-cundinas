@@ -181,6 +181,7 @@ function pagarPago(req, res) {
                 var suma = card.money + parseInt(cundina.cantidad);
                 Card.findByIdAndUpdate(card._id, { money: suma }, (err, cardUpdated) => {
                     if (err) return res.status(500).send({ message: `Error al pagar ${err}` });
+                    if (!card) return res.status(500).send({ message: `No se encontro tarjeta` });
                     Pago.findByIdAndUpdate(idP, { status: 'Pagado' }, (err, pagoUpdated) => {
                         if (err) return res.status(500).send({ message: `Error al pagar ${err}` });
                         return res.status(200).send({ card: cardUpdated, pago: pagoUpdated });
