@@ -105,7 +105,7 @@ function iniciarCundina(req, res) {
                 pago.save((err, saved) => {
                     if (err) return res.status({ message: `Error al guardar el pago ${err}` });
                     if (!saved) console.log('No se guardo un pago');
-                    console.log('pago agregado');
+                    console.log('pago agregado a ' + clientes[x].user);
                 });
             }
         }
