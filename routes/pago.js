@@ -13,8 +13,8 @@ router.get('/cobrosPendientesAdmin', md_auth.ensureAuth, pagoCtrl.cobrosAdminPen
 router.get('/cobrosPagadossAdmin', md_auth.ensureAuth, pagoCtrl.cobrosAdminPendientes);
 router.get('/pagosAdminXCundina/:id', md_auth.ensureAuth, pagoCtrl.pagosXCundinaAdmin);
 router.get('/cobrosAdminXCundina/:id', md_auth.ensureAuth, pagoCtrl.cobrosXCundinaAdmin);
-router.put('/pagarCobro/:idcobro/:idcard', md_auth.ensureAuth, pagoCtrl.pagarCobro);
-router.put('/pagarPago/:idP', md_auth.ensureAuth, pagoCtrl.pagarPago);
+router.get('/pagarCobro/:idcobro/:idcard', md_auth.ensureAuth, pagoCtrl.pagarCobro);
+router.get('/pagarPago/:idP', md_auth.ensureAuth, pagoCtrl.pagarPago);
 
 
 module.exports = router;

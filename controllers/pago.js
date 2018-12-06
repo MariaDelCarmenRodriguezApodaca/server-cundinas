@@ -128,6 +128,7 @@ function pagosXCundinaAdmin(req, res) {
         });
 }
 
+
 function cobrosXCundinaAdmin(req, res) {
     var admin = req.user.sub;
     var cundina = req.params.id;
