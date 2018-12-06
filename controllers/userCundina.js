@@ -1,6 +1,7 @@
 'use strict'
 const UserCundina = require('../models/userCundina');
 const User = require('../models/user');
+const Cundina = require('../models/cundina');
 
 //agregar usuarios por cundina
 function adduser(req, res) {
@@ -120,6 +121,27 @@ function getUserParaCundina(req, res) {
     })
 }
 
+function getCundinaForUserLogeado(req, res) {
+    var user = req.user.sub;
+    var response = [];
+    UserCundina.find({ user }, (err, usersCundina) => {
+        if (err) return res.status(500).send({ message: `Error  ${err}` });
+        var i = 0;
+        usersCundina.forEach(u => {
+            Cundina.findById(u.cundina, (err, cundina) => {
+                if (err) return res.status(500).send({ message: `Error  ${err}` });
+                i++;
+                response.push(cundina);
+                console.log(response)
+                if (i >= usersCundina.length) {
+                    res.status(200).send({ cundinas: response });
+                }
+            })
+        });
+
+    });
+}
+
 module.exports = {
     adduser,
     getUserCundina,
@@ -127,5 +149,7 @@ module.exports = {
     getUserXCundina,
     getPendientesXusuarioLogueado,
     changeStatusUserCundina,
-    getUserParaCundina
-};
+    getUserParaCundina,
+    getCundinaForUserLogeado,
+    getCundinaForUserLogeado
+}
