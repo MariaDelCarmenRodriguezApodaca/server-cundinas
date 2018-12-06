@@ -18,10 +18,12 @@ const moment = require('moment');
 
 function cobrosPendientesClienteLogueado(req, res) {
     var cliente = req.user.sub;
+    var cundina = req.params.id;
     console.log(cliente);
     Pago.find({
             user: cliente,
-            type: 'Cobro'
+            type: 'Cobro',
+            cundina: cundina
         })
         .populate({ path: 'cundina' })
         .populate({ path: 'user' })
@@ -124,4 +126,4 @@ module.exports = {
     cobrosPendientesClienteLogueado,
     cobrosAdminPendientes,
     pagosPendientesClienteLogueado
-}
+};
