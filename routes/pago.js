@@ -11,6 +11,7 @@ router.get('/pagosPendientesAdmin', md_auth.ensureAuth, pagoCtrl.pagosAdminPendi
 router.get('/pagosPagadosAdmin', md_auth.ensureAuth, pagoCtrl.pagosAdminPagados);
 router.get('/cobrosPendientesAdmin', md_auth.ensureAuth, pagoCtrl.cobrosAdminPendientes);
 router.get('/cobrosPagadossAdmin', md_auth.ensureAuth, pagoCtrl.cobrosAdminPendientes);
-
+router.get('/pagosAdminXCundina/:id', md_auth.ensureAuth, pagoCtrl.pagosXCundinaAdmin);
+router.get('/cobrosAdminXCundina/:id', md_auth.ensureAuth, pagoCtrl.cobrosXCundinaAdmin);
 
 module.exports = router;

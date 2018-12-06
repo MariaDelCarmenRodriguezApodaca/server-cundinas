@@ -115,6 +115,39 @@ function cobrosAdminPagados(req, res) {
     });
 }
 
+function pagosXCundinaAdmin(req, res) {
+    var admin = req.user.sub;
+    var cundina = req.params.id;
+    Cundinas.find({ _id: cundina }, (err, cundinas) => {
+        if (err) return res.status(500).send({ message: `Error al obtener lo datos de la cundina ${err}` });
+        cundinas.forEach(c => {
+            Pago.find({ cundina: c._id, type: 'Pago' })
+                .populate({ path: 'cundina' })
+                .populate({ path: 'user' })
+                .exec((err, pagos) => {
+                    if (err) return res.status(500).send({ message: `Error al obtener lo pagos de la cundina ${err}` });
+                    res.status(200).send({ pagos: pagos });
+                });
+        });
+    });
+}
+
+function cobrosXCundinaAdmin(req, res) {
+    var admin = req.user.sub;
+    var cundina = req.params.id;
+    Cundinas.find({ _id: cundina }, (err, cundinas) => {
+        if (err) return res.status(500).send({ message: `Error al obtener lo datos de la cundina ${err}` });
+        cundinas.forEach(c => {
+            Pago.find({ cundina: c._id, type: 'Cobro' })
+                .populate({ path: 'cundina' })
+                .populate({ path: 'user' })
+                .exec((err, pagos) => {
+                    if (err) return res.status(500).send({ message: `Error al obtener lo pagos de la cundina ${err}` });
+                    res.status(200).send({ pagos: pagos });
+                });
+        });
+    });
+}
 
 
 
@@ -125,5 +158,7 @@ module.exports = {
     pagosAdminPagados,
     cobrosPendientesClienteLogueado,
     cobrosAdminPendientes,
-    pagosPendientesClienteLogueado
+    pagosPendientesClienteLogueado,
+    pagosXCundinaAdmin,
+    cobrosXCundinaAdmin
 };
