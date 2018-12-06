@@ -167,6 +167,28 @@ function pagarCobro(req, res) {
     });
 }
 
+function pagarPago(req, res) {
+    let idP = req.params.idP; //id del pago
+    Pago.findById(idP, (err, pago) => {
+        if (err) return res.status(500).send({ message: `Error al localizar el pago ${err}` });
+        if (!pago) return res.status(500).send({ message: `no se encontro el pago` });
+        Cundinas.findById(pago.cundina, (err, cundina) => {
+            if (err) return res.status(500).send({ message: `Error al localizar la cundina ${err}` });
+            Card.findOne({ user: pago.user }, (err, card) => {
+                if (err) return res.status(500).send({ message: `Error al localizar la terjeta ${err}` });
+                let suma = card.money + parseInt(cundina.cantidad);
+                Card.findByIdAndUpdate(card._id, { money: suma }, (err, cardUpdated) => {
+                    if (err) return res.status(500).send({ message: `Error al pagar ${err}` });
+                    Pago.findByIdAndUpdate(idP, { status: 'Pagado' }, (err, pagoUpdated) => {
+                        if (err) return res.status(500).send({ message: `Error al pagar ${err}` });
+                        return res.status(200).send({ card: cardUpdated, pago: pagoUpdated });
+                    })
+                })
+            });
+        });
+    });
+}
+
 
 
 
@@ -180,5 +202,6 @@ module.exports = {
     pagosPendientesClienteLogueado,
     pagosXCundinaAdmin,
     cobrosXCundinaAdmin,
-    pagarCobro
+    pagarCobro,
+    pagarPago
 };

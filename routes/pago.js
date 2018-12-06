@@ -14,6 +14,7 @@ router.get('/cobrosPagadossAdmin', md_auth.ensureAuth, pagoCtrl.cobrosAdminPendi
 router.get('/pagosAdminXCundina/:id', md_auth.ensureAuth, pagoCtrl.pagosXCundinaAdmin);
 router.get('/cobrosAdminXCundina/:id', md_auth.ensureAuth, pagoCtrl.cobrosXCundinaAdmin);
 router.put('/pagarCobro/:idcobro/:idcard', md_auth.ensureAuth, pagoCtrl.pagarCobro);
+router.put('/pagarPago/:idP', md_auth.ensureAuth, pagoCtrl.pagarPago);
 
 
 module.exports = router;
