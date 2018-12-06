@@ -167,6 +167,7 @@ function pagarCobro(req, res) {
         })
     });
 }
+//sdfsdfjhsdfhj
 
 function pagarPago(req, res) {
     let idP = req.params.idP; //id del pago
