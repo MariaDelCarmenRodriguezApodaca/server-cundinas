@@ -1,6 +1,7 @@
 'use strict'
 
 const Pago = require('../models/pago');
+const Cundinas = require('../models/cundina');
 const moment = require('moment');
 
 //pagos por cliente
@@ -32,14 +33,11 @@ function cobrosPagadosClientes(req, res) {
 
 
 function cobrosPendientesClienteLogueado(req, res) {
-    //de una sola cundina
-    //localhost:3000/pago/cundina/cliente
     var cliente = req.user.sub;
     console.log(cliente);
-    //5c067fb213d68900163c2b0c
-    //5c067fb213d68900163c2b0c
     Pago.find({
-            user: '5c067fb213d68900163c2b0c'
+            user: cliente,
+            type: 'Cobro'
         })
         .populate({ path: 'cundina' })
         .populate({ path: 'user' })
@@ -48,21 +46,25 @@ function cobrosPendientesClienteLogueado(req, res) {
             if (!pagos) return res.status(404).send({ message: `No se encontraron cobros para la cundina` });
             return res.status(200).send({ pagos: pagos });
         });
-    //Prin si ves esto TE AMO!!
 }
 
-function pagosDelDiaAdmin(req, res) {
-    //de todas las cundinas del administrador
-
+function pagosAdminPendientes(req, res) {
+    var admin = req.user.sub;
+    Cundinas.find({ user: admin, status: 'Activa' }, (err, cundinas) => {
+        if (err) return res.status(500).send({ message: `Error al obtener lo datos de la cundina ${err}` });
+        cundinas.forEach(c => {
+            Pago.find({ cundina: c._id, status: 'Pendiente', type: 'Pago' }, (err, pagos) => {
+                if (err) return res.status(500).send({ message: `Error al obtener lo pagos de la cundina ${err}` });
+                res.status(200).send({ pagos: pagos });
+            });
+        });
+    });
 }
 
 function pagosAdminPagados(req, res) {
 
 }
 
-function pagosAdminPendientes() {
-
-}
 
 function gananciasAdmin(req, res) {
 
@@ -76,7 +78,6 @@ function gananciasDelDiaAdmin(req, res) {
 module.exports = {
     cobrosPagadosClientes,
     pagosPendientes,
-    pagosDelDiaAdmin,
     cobrosPendientesClienteLogueado,
     pagosAdminPagados,
     pagosAdminPendientes,

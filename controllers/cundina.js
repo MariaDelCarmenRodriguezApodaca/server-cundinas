@@ -72,6 +72,7 @@ function iniciarCundina(req, res) {
         !data.user ||
         !data.tipo ||
         !data.time ||
+        !data.cantidad ||
         !data.status ||
         !data.integrantes
     ) return res.status(500).send({ message: `No se mandaron todos los datos` });
@@ -124,7 +125,7 @@ function iniciarCundina(req, res) {
             let pago = new Pago();
             pago.cundina = id_cundina;
             pago.user = clientes[x]._id;
-            pago.cantidad = data.pago_individual;
+            pago.cantidad = data.cantidad;
             pago.fecha = fecha.format('YYYY-MM-DD');
             pago.status = 'Pendiente';
             pago.type = 'Pago';
@@ -139,7 +140,7 @@ function iniciarCundina(req, res) {
             let pago = new Pago();
             pago.cundina = id_cundina;
             pago.user = data.user;
-            pago.cantidad = data.pago_individual;
+            pago.cantidad = data.cantidad;
             pago.fecha = fecha.format('YYYY-MM-DD');
             pago.status = 'Pendiente';
             pago.type = 'Pago';
