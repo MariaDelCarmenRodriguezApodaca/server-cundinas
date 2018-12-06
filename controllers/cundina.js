@@ -60,10 +60,6 @@ function listAllCundinas(req, res) {
 }
 
 function iniciarCundina(req, res) {
-    /**
-     * falta agregar un pago extra para el administrador
-     * agregar los registros de los pagos para los clientes
-     */
     var id_cundina = req.params.id; //id de la cundina
     var data = req.body;
     var enviado = false;

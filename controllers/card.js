@@ -37,8 +37,8 @@ function addCard(req, res) {
         card.expiration_year = data.expiration_year;
         card.expiration_month = data.expiration_month;
         card.cvv2 = data.cvv2;
-        card.allow_charges = cardSaved.allow_charges;
-        card.allow_payout = cardSaved.allow_payout;
+        card.allow_charges = cardSaved.allow_charges || true;
+        card.allow_payout = cardSaved.allow_payout || true;
         card.creation_date = cardSaved.creation_date;
         card.bank_name = cardSaved.bank_name;
         card.bank_code = cardSaved.bank_code || null;

@@ -14,7 +14,7 @@ let cardSchema = new Schema({
     expiration_month: { type: String, required: true },
     cvv2: { type: String, required: true },
     allow_charges: { type: Boolean, required: false },
-    allow_payouts: { type: String, required: false },
+    allow_payouts: { type: Boolean, required: false },
     creation_date: { type: String, required: true },
     bank_name: { type: String, required: true },
     bank_code: { type: String, required: false },
