@@ -177,7 +177,8 @@ function pagarPago(req, res) {
             if (err) return res.status(500).send({ message: `Error al localizar la cundina ${err}` });
             Card.findOne({ user: pago.user }, (err, card) => {
                 if (err) return res.status(500).send({ message: `Error al localizar la terjeta ${err}` });
-                let suma = card.money + parseInt(cundina.cantidad);
+                console.log(card);
+                var suma = card.money + parseInt(cundina.cantidad);
                 Card.findByIdAndUpdate(card._id, { money: suma }, (err, cardUpdated) => {
                     if (err) return res.status(500).send({ message: `Error al pagar ${err}` });
                     Pago.findByIdAndUpdate(idP, { status: 'Pagado' }, (err, pagoUpdated) => {
